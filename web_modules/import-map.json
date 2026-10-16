@@ -1,0 +1,18 @@
+{
+  "imports": {
+    "es-module-shims": "./es-module-shims.js",
+    "es-module-shims/debug": "./es-module-shims/debug.js",
+    "es-module-shims/wasm": "./es-module-shims/wasm.js",
+    "es-module-shims/typescript-transform": "./es-module-shims/typescript-transform.js",
+    "fmix": "./fmix.js",
+    "pex-gpu": "./pex-gpu.js",
+    "pex-gpu/internals": "./pex-gpu/internals.js",
+    "pex-math": "./pex-math.js",
+    "pex-random": "./pex-random.js",
+    "pex-renderer": "./pex-renderer.js",
+    "point-elimination": "./point-elimination.js",
+    "primitive-geometry": "./primitive-geometry.js",
+    "tweakpane": "./tweakpane.js",
+    "geom-distribute": "../index.js"
+  }
+}

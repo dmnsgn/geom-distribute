@@ -1,0 +1,78 @@
+{
+  "name": "geom-distribute",
+  "version": "1.0.0",
+  "description": "Distribute points on the faces of a triangle mesh: by count or density, random or Poisson disk, weighted by a per-vertex density, with stable per-face seeds and interpolated vertex attributes.",
+  "keywords": [
+    "geom",
+    "geometry",
+    "mesh",
+    "distribute",
+    "scatter",
+    "points",
+    "sampling",
+    "surface-sampling",
+    "poisson-disk",
+    "blue-noise",
+    "density",
+    "barycentric",
+    "typed-array"
+  ],
+  "homepage": "https://github.com/dmnsgn/geom-distribute",
+  "bugs": "https://github.com/dmnsgn/geom-distribute/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dmnsgn/geom-distribute.git"
+  },
+  "funding": [
+    {
+      "type": "individual",
+      "url": "https://paypal.me/dmnsgn"
+    },
+    {
+      "type": "individual",
+      "url": "https://commerce.coinbase.com/checkout/56cbdf28-e323-48d8-9c98-7019e72c97f3"
+    }
+  ],
+  "license": "MIT",
+  "author": "Damien Seguin (https://github.com/dmnsgn)",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "default": "./index.js"
+    }
+  },
+  "main": "./index.js",
+  "types": "./types/index.d.ts",
+  "packageManager": "npm@11.3.0",
+  "engines": {
+    "node": ">=24.0.0",
+    "snowdev": ">=3.0.0-alpha.3"
+  },
+  "scripts": {
+    "test": "node --experimental-test-coverage test",
+    "test:watch": "node --watch --experimental-test-coverage test"
+  },
+  "dependencies": {
+    "fmix": "^1.0.0",
+    "pex-math": "^4.4.0",
+    "pex-random": "^2.1.2",
+    "point-elimination": "^1.0.0"
+  },
+  "peerDependencies": {
+    "primitive-geometry": "^3.2.2"
+  },
+  "peerDependenciesMeta": {
+    "primitive-geometry": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "es-module-shims": "^2.8.4",
+    "pex-gpu": "^0.0.4",
+    "pex-renderer": "6.0.0-alpha.2",
+    "primitive-geometry": "^3.2.2",
+    "tweakpane": "^4.0.5"
+  }
+}

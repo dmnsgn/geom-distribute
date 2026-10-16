@@ -1,0 +1,96 @@
+import { i as motionBlurTileMaxYShader, n as motionBlurShader, r as motionBlurTileMaxXShader, t as motionBlurNeighborMaxShader } from "./motion-blur-CWB_6Jk6.js";
+
+/** Velocity, and the tiles reduced from it, are signed and want the range. */
+const VELOCITY_FORMAT = "rg16float";
+/**
+* Motion blur.
+*
+* McGuire et al.'s tile framework with Guertin et al.'s 2014 reconstruction
+* filter: the velocity buffer is reduced to a grid of dominant motions, each
+* tile widened to include the motions that could reach it, and every pixel then
+* gathers colour along those motions.
+*
+* Runs after the temporal resolve and depth of field, before bloom, on the
+* linear image. After the resolve because blurring a jittered frame would smear
+* the jitter along with everything else, and the accumulated image is what
+* should be smeared; after depth of field because that one needs the image to
+* still match the depth buffer and this is what breaks that; before bloom
+* because a streak that ends bright should glare.
+*
+* A thin bright line smeared over its streak is divided by the streak's length,
+* which can take it under the bloom threshold — the glare then thins out with
+* speed rather than streaking. That is what every engine putting bloom last
+* does; `bloom.softKnee` is what keeps it a fade rather than a cliff.
+*/
+const motionBlur = {
+	name: "motionBlur",
+	outputs: ["velocity"],
+	declare({ cameraEntity, renderView, samplers, textures, pass }) {
+		const camera = cameraEntity.camera;
+		const component = cameraEntity.postProcessing.motionBlur;
+		const velocity = textures.get("velocity");
+		const depth = textures.get("depth");
+		if (!velocity || !depth) return;
+		const intensity = component.intensity ?? 1;
+		if (intensity <= 0) return;
+		const width = renderView.viewport[2];
+		const height = renderView.viewport[3];
+		const tileSize = Math.max(1, Math.trunc(component.tileSize ?? 40));
+		const tilesX = Math.ceil(width / tileSize);
+		const tilesY = Math.ceil(height / tileSize);
+		const constants = { MOTION_BLUR_TILE_SIZE: tileSize };
+		const uMotionBlur = {
+			viewportSize: [width, height],
+			texelSize: [1 / width, 1 / height],
+			tileSize,
+			intensity,
+			centerWeightBias: component.centerWeightBias ?? 40,
+			directionBlend: component.directionBlend ?? 1.5,
+			jitterScale: component.jitterScale ?? 27,
+			tileBlend: component.tileBlend ?? 1,
+			near: camera.near,
+			far: camera.far
+		};
+		const rows = pass({
+			name: "tileMaxX",
+			shader: motionBlurTileMaxXShader,
+			constants,
+			source: velocity,
+			size: [tilesX, height],
+			format: VELOCITY_FORMAT,
+			uniforms: { uMotionBlur }
+		});
+		const tiles = pass({
+			name: "tileMaxY",
+			shader: motionBlurTileMaxYShader,
+			constants,
+			source: rows,
+			size: [tilesX, tilesY],
+			format: VELOCITY_FORMAT
+		});
+		const neighborMax = pass({
+			name: "neighborMax",
+			shader: motionBlurNeighborMaxShader,
+			source: tiles,
+			size: [tilesX, tilesY],
+			format: VELOCITY_FORMAT
+		});
+		pass({
+			name: "main",
+			shader: motionBlurShader,
+			constants: { MOTION_BLUR_SAMPLES: component.samples ?? 35 },
+			chain: true,
+			uniforms: {
+				uMotionBlur,
+				uVelocityTexture: velocity,
+				uVelocityTextureSampler: samplers.nearest,
+				uNeighborMaxTexture: neighborMax,
+				uNeighborMaxTextureSampler: samplers.nearest,
+				uDepthTexture: depth,
+				uDepthTextureSampler: samplers.nearest
+			}
+		});
+	}
+};
+
+export { motionBlur as default };
