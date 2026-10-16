@@ -21,8 +21,8 @@
  * @typedef {object} DistributeOptions
  * @property {import("primitive-geometry").NonNegativeInteger} [count=1000]
  *   Number of points.
- * @property {number} [density] Points per unit area, finite and >= 0.
- *   Overrides `count`. Points stay on their face when the mesh deforms.
+ * @property {number} [density] Points per unit area, finite and >= 0. Overrides
+ *   `count`. Points stay on their face when the mesh deforms.
  * @property {number} [maxCount=Infinity] Upper bound on the number of points in
  *   density mode, lowering the density when reached.
  * @property {"random" | "poisson"} [method="random"] Poisson disk distributions
@@ -32,8 +32,8 @@
  *   Candidates per point in Poisson count mode: more is evener but slower.
  * @property {number} [distanceMin=0] Minimum distance between points in Poisson
  *   density mode, where weights are 1.
- * @property {Float32Array | number[]} [weights] Per-vertex density factors,
- *   one per vertex: relative in count mode, multiplying `density` otherwise.
+ * @property {Float32Array | number[]} [weights] Per-vertex density factors, one
+ *   per vertex: relative in count mode, multiplying `density` otherwise.
  *   Poisson spacing scales with 1 / sqrt(weight).
  * @property {number | string} [seed=0]
  * @property {string[]} [attributes] Per-vertex attributes to interpolate.

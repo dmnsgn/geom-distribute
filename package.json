@@ -45,11 +45,6 @@
   },
   "main": "./index.js",
   "types": "./types/index.d.ts",
-  "packageManager": "npm@11.3.0",
-  "engines": {
-    "node": ">=24.0.0",
-    "snowdev": ">=3.0.0-alpha.3"
-  },
   "scripts": {
     "test": "node --experimental-test-coverage test",
     "test:watch": "node --watch --experimental-test-coverage test"
@@ -60,6 +55,13 @@
     "pex-random": "^2.1.2",
     "point-elimination": "^1.0.0"
   },
+  "devDependencies": {
+    "es-module-shims": "^2.8.4",
+    "pex-gpu": "^0.0.4",
+    "pex-renderer": "6.0.0-alpha.2",
+    "primitive-geometry": "^3.2.2",
+    "tweakpane": "^4.0.5"
+  },
   "peerDependencies": {
     "primitive-geometry": "^3.2.2"
   },
@@ -68,11 +70,9 @@
       "optional": true
     }
   },
-  "devDependencies": {
-    "es-module-shims": "^2.8.4",
-    "pex-gpu": "^0.0.4",
-    "pex-renderer": "6.0.0-alpha.2",
-    "primitive-geometry": "^3.2.2",
-    "tweakpane": "^4.0.5"
+  "packageManager": "npm@11.3.0",
+  "engines": {
+    "node": ">=24.0.0",
+    "snowdev": ">=3.0.0-alpha.3"
   }
 }

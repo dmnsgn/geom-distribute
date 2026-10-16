@@ -66,7 +66,100 @@ const light = distribute(geometry, { attributes: ["normals"] });
 
 <!-- api-start -->
 
-Auto-generated API content.
+## Modules
+
+<dl>
+<dt><a href="#module_geomDistribute">geomDistribute</a></dt>
+<dd></dd>
+</dl>
+
+## Typedefs
+
+<dl>
+<dt><a href="#SimplicialComplex">SimplicialComplex</a> : <code>object</code></dt>
+<dd><p>Triangle cells over shared positions. Any
+  other Float32Array or number[] property whose length is a multiple of the
+  vertex count is a per-vertex attribute (normals, uvs, vertexColors...), its
+  stride being that multiple.</p>
+</dd>
+<dt><a href="#PointGeometry">PointGeometry</a> : <code>object</code></dt>
+<dd><p>Distributed points and their per-vertex
+  attributes interpolated from the source geometry.</p>
+</dd>
+<dt><a href="#DistributeOptions">DistributeOptions</a> : <code>object</code></dt>
+<dd></dd>
+</dl>
+
+<a name="module_geomDistribute"></a>
+
+## geomDistribute
+
+<a name="module_geomDistribute.distribute"></a>
+
+### geomDistribute.distribute(geometry, [options]) ⇒ [<code>PointGeometry</code>](#PointGeometry)
+
+Distribute points on the faces of a triangle mesh, uniformly by area or
+weighted by a per-vertex density.
+
+**Kind**: static method of [<code>geomDistribute</code>](#module_geomDistribute)
+
+| Param     | Type                                                 | Default         |
+| --------- | ---------------------------------------------------- | --------------- |
+| geometry  | [<code>SimplicialComplex</code>](#SimplicialComplex) |                 |
+| [options] | [<code>DistributeOptions</code>](#DistributeOptions) | <code>{}</code> |
+
+<a name="SimplicialComplex"></a>
+
+## SimplicialComplex : <code>object</code>
+
+Triangle cells over shared positions. Any
+other Float32Array or number[] property whose length is a multiple of the
+vertex count is a per-vertex attribute (normals, uvs, vertexColors...), its
+stride being that multiple.
+
+**Kind**: global typedef
+**Properties**
+
+| Name      | Type                                                  | Description                   |
+| --------- | ----------------------------------------------------- | ----------------------------- |
+| positions | <code>Float32Array</code>                             |                               |
+| cells     | <code>module:primitive-geometry~TypedArrayLike</code> | Flat triangle vertex indices. |
+
+<a name="PointGeometry"></a>
+
+## PointGeometry : <code>object</code>
+
+Distributed points and their per-vertex
+attributes interpolated from the source geometry.
+
+**Kind**: global typedef
+**Properties**
+
+| Name         | Type                      | Description                                     |
+| ------------ | ------------------------- | ----------------------------------------------- |
+| positions    | <code>Float32Array</code> |                                                 |
+| faceIndices  | <code>Uint32Array</code>  | Source face of each point.                      |
+| barycentrics | <code>Float32Array</code> | Weights of the source face vertices (stride 3). |
+
+<a name="DistributeOptions"></a>
+
+## DistributeOptions : <code>object</code>
+
+**Kind**: global typedef
+**Properties**
+
+| Name           | Type                                                                | Default                         | Description                                                                                                                                        |
+| -------------- | ------------------------------------------------------------------- | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [count]        | <code>module:primitive-geometry~NonNegativeInteger</code>           | <code>1000</code>               | Number of points.                                                                                                                                  |
+| [density]      | <code>number</code>                                                 |                                 | Points per unit area, finite and >= 0. Overrides `count`. Points stay on their face when the mesh deforms.                                         |
+| [maxCount]     | <code>number</code>                                                 | <code>Infinity</code>           | Upper bound on the number of points in density mode, lowering the density when reached.                                                            |
+| [method]       | <code>&quot;random&quot;</code> \| <code>&quot;poisson&quot;</code> | <code>&quot;random&quot;</code> | Poisson disk distributions space points evenly: exactly `count` points, or points at least `distanceMin` apart in density mode.                    |
+| [oversampling] | <code>module:primitive-geometry~PositiveInteger</code>              | <code>5</code>                  | Candidates per point in Poisson count mode: more is evener but slower.                                                                             |
+| [distanceMin]  | <code>number</code>                                                 | <code>0</code>                  | Minimum distance between points in Poisson density mode, where weights are 1.                                                                      |
+| [weights]      | <code>Float32Array</code> \| <code>Array.&lt;number&gt;</code>      |                                 | Per-vertex density factors, one per vertex: relative in count mode, multiplying `density` otherwise. Poisson spacing scales with 1 / sqrt(weight). |
+| [seed]         | <code>number</code> \| <code>string</code>                          | <code>0</code>                  |                                                                                                                                                    |
+| [attributes]   | <code>Array.&lt;string&gt;</code>                                   |                                 | Per-vertex attributes to interpolate. Defaults to all of them.                                                                                     |
+| [normalize]    | <code>boolean</code> \| <code>Array.&lt;string&gt;</code>           | <code>true</code>               | Attributes renormalized after interpolation, `true` for normals, tangents and binormals. Only their first three components are normalized.         |
 
 <!-- api-end -->
 
